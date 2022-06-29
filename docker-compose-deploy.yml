@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    volumes:
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - SECRET_KEY=${SECRET_KEY}
+
+
+  proxy:
+    build: 
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      -80:8000
