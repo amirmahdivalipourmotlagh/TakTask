@@ -32,13 +32,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(int(os.environ.get('DEBUG' , 0)))
 
 # ALLOWED_HOSTS = ['localhost','127.0.0.1','zzone.pythonanywhere.com']
-ALLOWED_HOSTS = []
-ALLOWED_HOSTS.extend(
-    filter(
-        None,
-        os.environ.get('ALLOWED_HOSTS' , '').split(','),
-    )
-)
+ALLOWED_HOSTS = ['localhost','127.0.0.1','0.0.0.0','149.202.153.4']
+
 
 # Application definition
 
@@ -115,6 +110,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://tak-task.vercel.app',
     'http://localhost:3000',
     'http://healclife.com',
+    'http://taktask.ir',
 ]
 CORS_ORIGIN_ALLOW_ALL = False
 
@@ -124,6 +120,7 @@ CORS_ORIGIN_WHITELIST = (
     'https://tak-task.vercel.app',
     'http://localhost:3000',
     'http://healclife.com',
+    'http://taktask.ir',
 )
 CORS_ALLOW_HEADERS = (
     'content-disposition',
@@ -230,6 +227,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT ='/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

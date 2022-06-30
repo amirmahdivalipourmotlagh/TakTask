@@ -1,24 +1,29 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  web:
+  web_gunicorn:
     build:
-      context: ./app
+      context: .
       dockerfile: Dockerfile.prod
-    command: >
-      sh -c   "python manage.py makemigrations &&
-               python manage.py migrate &&
-               gunicorn TakTask_project.wsgi -w 4 --bind 127.0.0.1:8001"
+    command: gunicorn TakTask_project.wsgi -w 4 --bind 127.0.0.1:8000
     volumes:
       - ./app/:/usr/src/app/
-    expose:
-      - 8000
+      - static:/static
+    ports:
+      - 8000:8000
     env_file:
       - ./.env.dev
+    restart: "on-failure"
 
   nginx:
     build: ./nginx
+    volumes:
+      - static:/static
     ports:
       - 1337:80
     depends_on:
-      - web
+      - web_gunicorn
+    restart: "on-failure"
+
+volumes:
+  static:

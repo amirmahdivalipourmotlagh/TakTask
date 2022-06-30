@@ -1,7 +1,8 @@
-FROM python:3.8
+FROM python:3.8.5-alpine
 
 # set work directory
-WORKDIR /usr/src/app
+COPY ./app /app
+WORKDIR /app
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -12,5 +13,5 @@ COPY ./requirements.txt .
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# copy project
-COPY . .
+COPY ./entrypoint.sh /
+ENTRYPOINT [ "sh" , "/entrypoint.sh" ]

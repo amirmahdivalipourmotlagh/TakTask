@@ -1,34 +1,29 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  web:
-    build: ./app
-    command: >
-        sh -c "python manage.py makemigrations &&
-               python manage.py migrate &&
-               python manage.py runserver"
+  web_gunicorn:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: gunicorn TakTask_project.wsgi -w 4 --bind 127.0.0.1:8000
     volumes:
       - ./app/:/usr/src/app/
+      - static:/static
     ports:
       - 8000:8000
     env_file:
       - ./.env.dev
+    restart: "on-failure"
 
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/static
+    ports:
+      - 1337:80
+    depends_on:
+      - web_gunicorn
+    restart: "on-failure"
 
-# version: '3.9'
-
-# services:
-#   app:
-#     build:
-#       context: .
-#     command: >
-#       sh -c "python manage.py makemigrations &&
-#              python manage.py migrate &&
-#              python manage.py runserver 0.0.0.0:8000"
-#     ports:
-#       - 8000:8000
-#     volumes:
-#       - .:/app
-#     environment:
-#       - SECRET_KEY=testkey
-#       - DEBUG=1 
+volumes:
+  static:
